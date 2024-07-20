@@ -1,6 +1,6 @@
-import { findPrimaryContact } from "../Helpers/user"
+import { findPrimaryContact, createNewContact } from "../Helpers/user"
 
-const identifyContact = async(email?: string, phoneNumber?: string) => {
+const identifyContact = async (email?: string, phoneNumber?: string) => {
 
 
     try {
@@ -10,21 +10,23 @@ const identifyContact = async(email?: string, phoneNumber?: string) => {
         let primaryAccount = null
         // If email exists in Request take that contact details if the contact is exists
         if (email) {
-            const key="email",
-            primaryAccount = await findPrimaryContact(key,email)
+            const key = "email",
+                primaryAccount = await findPrimaryContact(key, email)
         }
-        
-        //If primary account details not found using email find using phoneNumber
-        if(!primaryAccount&&phoneNumber){
 
-            const key="phoneNumber"
-            primaryAccount=await findPrimaryContact(key,phoneNumber)
+        //If primary account details not found using email find using phoneNumber
+        if (!primaryAccount && phoneNumber) {
+
+            const key = "phoneNumber"
+            primaryAccount = await findPrimaryContact(key, phoneNumber)
         }
         // If account details not found regarding number or email create a new one
-        if(!primaryAccount){
+        if (!primaryAccount) {
 
-            // primaryAccount=await 
+            primaryAccount = await createNewContact(email, phoneNumber)
         }
+        
+        return primaryAccount
     } catch (error) {
 
 
