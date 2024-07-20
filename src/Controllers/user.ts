@@ -1,35 +1,44 @@
 import { findPrimaryContact, createNewContact } from "../Helpers/user"
+import { Request, Response } from "express"
 
-const identifyContact = async (email?: string, phoneNumber?: string) => {
-
+const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
 
     try {
 
-        if (!email && !phoneNumber) throw new Error("Please provide neccessory details")
-
-        let primaryAccount = null
+        let primaryContact = null
         // If email exists in Request take that contact details if the contact is exists
         if (email) {
             const key = "email",
-                primaryAccount = await findPrimaryContact(key, email)
+                primaryContact = await findPrimaryContact(key, email)
         }
 
-        //If primary account details not found using email find using phoneNumber
-        if (!primaryAccount && phoneNumber) {
+        //If primary Contact details not found using email find using phoneNumber
+        if (!primaryContact && phoneNumber) {
 
             const key = "phoneNumber"
-            primaryAccount = await findPrimaryContact(key, phoneNumber)
+            primaryContact = await findPrimaryContact(key, phoneNumber)
         }
-        // If account details not found regarding number or email create a new one
-        if (!primaryAccount) {
+        // If Contact details not found regarding number or email create a new one
+        if (!primaryContact) {
 
-            primaryAccount = await createNewContact(email, phoneNumber)
+            primaryContact = await createNewContact(email, phoneNumber)
         }
-        
-        return primaryAccount
+
+        return primaryContact
     } catch (error) {
 
 
 
     }
 }
+
+export const identifyContact =async (req: Request, res: Response) => {
+
+    const { email, phoneNumber } = req.body
+
+    if (!email && !phoneNumber) res.status(400).json({ error: 'Either email or phoneNumber must be provided' })
+
+    // Find or create contact
+    const primaryContact = await findOrCreateContact(email, phoneNumber)
+
+} 
