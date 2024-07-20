@@ -1,9 +1,12 @@
-import expres from "express"
-const userRoutes=()=>{
+import express from "express"
+import { identifyContact } from "../Controllers/user"
+export const userRoutes = () => {
 
-const router=expres.Router()
+    const router = express.Router()
+    
+    router.route('/identify')
+        .post(identifyContact)
 
-router.route('/').post
+    return router
 
 }
-export default userRoutes

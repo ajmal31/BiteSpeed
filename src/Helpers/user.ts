@@ -13,19 +13,42 @@ export const findPrimaryContact = async (key: string, value: string) => {
         if (error instanceof DatabaseError) {
             throw new Error(error.message)
         }
+        throw error
     }
+
 }
 
 //Create new contact
-export const createNewContact = async (email?: string, phoneNumber?: string) => {
+export const createNewContact = async (email?: string, phoneNumber?: string,linkPrecedence?:string,linkedId?:string) => {
 
     try {
-        const newContact = await Contact.create({ email, phoneNumber, linkPrecedence: "primary" })
+        const newContact = await Contact.create({ email, phoneNumber, linkPrecedence,linkedId })
         return newContact
     } catch (error) {
         if (error instanceof DatabaseError) {
             throw new Error(error.message)
         }
+    }
+}
+//Find secondory contacts
+export const findSecondoryContacts = async (email?: string, phoneNumber?: string, primaryContactId?: string) => {
+    try {
+        const secondaryContacts = await Contact.findAll({
+            where: {
+                [Op.or]: [
+                    { email },
+                    { phoneNumber },
+                    { linkedId: primaryContactId }
+                ],
+                linkPrecedence: 'secondory'
+            }
+        });
+        return secondaryContacts
+    } catch (error) {
+        if (error instanceof DatabaseError) {
+            throw new Error(error.message)
+        }
+
     }
 }
 

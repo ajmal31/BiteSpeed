@@ -9,10 +9,11 @@ Contact.init({
 
     id: {
         type: INTEGER,
+        primaryKey:true,
         autoIncrement: true,
     },
     phoneNumber: {
-        type: INTEGER,
+        type: STRING,
         allowNull:true
     },
     email:{

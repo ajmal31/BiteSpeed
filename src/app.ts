@@ -1,22 +1,26 @@
-import express, { Express } from "express"
-import {dbConnection} from "./Config/database"
-import helmet from "helmet"
-import xXssProtection from "x-xss-protection"
-import morgan from "morgan"
+import express, { Express } from "express";
+import { dbConnection } from "./Config/database";
+import helmet from "helmet";
+import xXssProtection from "x-xss-protection";
+import morgan from "morgan";
+import { userRoutes } from "./Routes/userRoutes";
 
-const app: Express = express()
+const app: Express = express();
 
-app.use(express.json())
+// Database connection
+dbConnection();
 
-app.use(helmet())
+// Middleware
+app.use(express.json());
+app.use(helmet());
+app.use(xXssProtection());
+app.use(morgan("dev"));
 
-//Preventing Script Injecting Attacks
-app.use(xXssProtection())
+// Routes
+app.use('/api/v1', userRoutes());
 
-app.use(morgan("dev"))
-
-app.listen(process.env.PORT, () => {
-    console.log(`Server Listening on ${process.env.PORT}`)
-})
-dbConnection()
-
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server Listening on ${PORT}`);
+});
