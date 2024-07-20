@@ -15,3 +15,17 @@ export const findPrimaryContact = async (key: string, value: string) => {
         }
     }
 }
+
+//Create new contact
+export const createNewContact = async (email?: string, phoneNumber?: string) => {
+
+    try {
+        const newContact = await Contact.create({ email, phoneNumber, linkPrecedence: "primary" })
+        return newContact
+    } catch (error) {
+        if (error instanceof DatabaseError) {
+            throw new Error(error.message)
+        }
+    }
+}
+

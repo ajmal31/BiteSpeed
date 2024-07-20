@@ -1,4 +1,4 @@
-import { findPrimaryContact } from "../Helpers/user"
+import { createNewContact, findPrimaryContact } from "../Helpers/user"
 import { Request, Response } from "express"
 
 const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
@@ -18,7 +18,11 @@ const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
             const key = "phoneNumber"
             primaryContact = await findPrimaryContact(key, phoneNumber)
         }
-       
+        if(primaryContact){
+
+            primaryContact=await createNewContact(email,phoneNumber)
+        }
+        return primaryContact
     } catch (error) {
 
 
