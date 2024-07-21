@@ -1,9 +1,15 @@
 import { Sequelize } from "sequelize";
 
-export const sequelize = new Sequelize("users", process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+export const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
-    host: "localhost",
-    dialect: 'postgres'
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    },
+    logging: false, // Set to true if you want to see SQL queries in the console
 })
 export default sequelize
 

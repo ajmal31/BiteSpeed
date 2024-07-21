@@ -72,7 +72,7 @@ export const identifyContact = async (req: Request, res: Response) => {
 
         secondoryContacts.forEach((contact: any) => {
             if (contact?.email && !emails.includes(contact.email)) emails.push(contact.email)
-            if (contact?.phoneNumber && !phoneNumbers.includes(contact.phoneNumbers)) emails.push(contact.phoneNumber)
+            if (contact?.phoneNumber && !phoneNumbers.includes(contact.phoneNumbers)) phoneNumbers.push(contact.phoneNumber)
         })
 
         res.status(200).json({

@@ -33,8 +33,6 @@ export const createNewContact = async (email?: string, phoneNumber?: string, lin
 //Find secondory contacts
 export const findSecondoryContacts = async (email?: string, phoneNumber?: string, primaryContactId?: string) => {
     try {
-        console.log("bigning");
-        console.log(email, phoneNumber, primaryContactId)
         const secondaryContacts = await Contact.findAll({
             where: {
                 [Op.or]: [
@@ -45,8 +43,6 @@ export const findSecondoryContacts = async (email?: string, phoneNumber?: string
                 linkPrecedence: 'secondory'
             }
         });
-
-        console.log("what response", secondaryContacts)
         return secondaryContacts
     } catch (error) {
         if (error instanceof DatabaseError) {
