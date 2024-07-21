@@ -58,11 +58,13 @@ const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
  * @returns The JSON response with contact details.
  */
 export const identifyContact = async (req: Request, res: Response) => {
-    const { email, phoneNumber } = req.body;
+    let { email, phoneNumber } = req.body;
 
     if (!email && !phoneNumber) {
         return res.status(400).json({ error: 'Either email or phoneNumber must be provided' });
     }
+    if(!email)email=null
+    if(!phoneNumber)phoneNumber=null
 
     try {
         const primaryContact = await findOrCreateContact(email, phoneNumber);
