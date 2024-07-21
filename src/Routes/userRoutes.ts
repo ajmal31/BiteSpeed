@@ -4,6 +4,7 @@ export const userRoutes = () => {
 
     const router = express.Router()
     
+    //Routes
     router.route('/identify')
         .post(identifyContact)
 

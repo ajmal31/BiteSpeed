@@ -5,6 +5,7 @@ import xXssProtection from "x-xss-protection";
 import morgan from "morgan";
 import { userRoutes } from "./Routes/userRoutes";
 import env from "./Config/env";
+import { baseRoutes } from "./Routes/baseRoute";
 
 const app: Express = express();
 
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use('/api/v1', userRoutes());
+app.use('/',baseRoutes())
 
 // Start server
 const PORT = env.PORT || 3000;

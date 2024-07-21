@@ -25,7 +25,7 @@ Contact.init({
         allowNull:true,
     },
     linkPrecedence:{
-        type:DataTypes.ENUM("primary","secondory"),
+        type:DataTypes.ENUM("primary","secondary"),
         allowNull:true
     },
     createdAt:{
