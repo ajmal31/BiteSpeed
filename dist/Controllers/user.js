@@ -10,8 +10,6 @@ const findOrCreateSecondoryContact = async (primaryContactId, email, phoneNumber
     if (!secondoryContact) {
         const secondoryContact = await (0, user_1.createNewContact)(email, phoneNumber, linkPrecedence, primaryContactId);
     }
-    else
-        console.log("secondory already exists");
     return secondoryContact;
 };
 const findOrCreateContact = async (email, phoneNumber) => {

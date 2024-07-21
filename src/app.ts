@@ -4,6 +4,7 @@ import helmet from "helmet";
 import xXssProtection from "x-xss-protection";
 import morgan from "morgan";
 import { userRoutes } from "./Routes/userRoutes";
+import env from "./Config/env";
 
 const app: Express = express();
 
@@ -20,7 +21,7 @@ app.use(morgan("dev"));
 app.use('/api/v1', userRoutes());
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server Listening on ${PORT}`);
 });
