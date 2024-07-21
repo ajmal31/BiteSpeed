@@ -2,7 +2,7 @@ import { Model, DataTypes } from "sequelize"
 import { sequelize } from "../Config/database"
 
 
-class Contact extends Model { }
+class Contact extends Model {}
 
 const { INTEGER,STRING,DATE,NOW } = DataTypes
 Contact.init({

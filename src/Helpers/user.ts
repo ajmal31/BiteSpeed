@@ -19,10 +19,10 @@ export const findPrimaryContact = async (key: string, value: string) => {
 }
 
 //Create new contact
-export const createNewContact = async (email?: string, phoneNumber?: string,linkPrecedence?:string,linkedId?:string) => {
+export const createNewContact = async (email?: string, phoneNumber?: string, linkPrecedence?: string, linkedId?: string) => {
 
     try {
-        const newContact = await Contact.create({ email, phoneNumber, linkPrecedence,linkedId })
+        const newContact = await Contact.create({ email, phoneNumber, linkPrecedence, linkedId })
         return newContact
     } catch (error) {
         if (error instanceof DatabaseError) {
@@ -33,6 +33,8 @@ export const createNewContact = async (email?: string, phoneNumber?: string,link
 //Find secondory contacts
 export const findSecondoryContacts = async (email?: string, phoneNumber?: string, primaryContactId?: string) => {
     try {
+        console.log("bigning");
+        console.log(email, phoneNumber, primaryContactId)
         const secondaryContacts = await Contact.findAll({
             where: {
                 [Op.or]: [
@@ -43,12 +45,27 @@ export const findSecondoryContacts = async (email?: string, phoneNumber?: string
                 linkPrecedence: 'secondory'
             }
         });
+
+        console.log("what response", secondaryContacts)
         return secondaryContacts
     } catch (error) {
         if (error instanceof DatabaseError) {
             throw new Error(error.message)
         }
 
+    }
+}
+
+export const findSecondoryContact = async (email?: string, phoneNumber?: string) => {
+
+    try {
+
+        const secondoryContact = await Contact.findOne({ where: { email, phoneNumber, linkPrecedence: "secondory" } })
+        return secondoryContact
+    } catch (error) {
+        if (error instanceof DatabaseError) {
+            throw new Error(error.message)
+        }
     }
 }
 

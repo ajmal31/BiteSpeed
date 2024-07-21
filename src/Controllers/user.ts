@@ -1,5 +1,19 @@
-import { createNewContact, findPrimaryContact, findSecondoryContacts } from "../Helpers/user"
+import { createNewContact, findPrimaryContact, findSecondoryContact, findSecondoryContacts } from "../Helpers/user"
 import { Request, Response } from "express"
+
+const findOrCreateSecondoryContact = async (primaryContactId?: string, email?: string, phoneNumber?: string) => {
+
+    //create secondory contacts
+    const linkPrecedence = "secondory"
+    let secondoryContact = null
+
+    secondoryContact = await findSecondoryContact(email, phoneNumber)
+    if (!secondoryContact) {
+        const secondoryContact = await createNewContact(email, phoneNumber, linkPrecedence, primaryContactId)
+    } else console.log("secondory already exists")
+
+    return secondoryContact
+}
 
 const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
 
@@ -8,9 +22,8 @@ const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
         let primaryContact = null
         // If email exists in Request take that contact details if the contact is exists
         if (email) {
-            const key = "email",
-                primaryContact = await findPrimaryContact(key, email)
-                console.log("email primary",primaryContact)
+            const key = "email"
+            primaryContact = await findPrimaryContact(key, email)
         }
 
         //If primary Contact details not found using email find using phoneNumber
@@ -24,14 +37,15 @@ const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
             primaryContact = await createNewContact(email, phoneNumber, linkPrecedence)
 
         } else {
+
             if (primaryContact.email !== email || primaryContact.phoneNumber !== phoneNumber) {
-                //create secondory contacts
-                const linkPrecedence = "secondory"
+
                 const { id } = primaryContact
-                const secondoryContact = await createNewContact(email, phoneNumber, linkPrecedence,id)
+                await findOrCreateSecondoryContact(id, email, phoneNumber)
 
             }
         }
+
         return primaryContact
     } catch (error) {
         throw new Error(error)
@@ -44,12 +58,34 @@ export const identifyContact = async (req: Request, res: Response) => {
 
     if (!email && !phoneNumber) return res.status(400).json({ error: 'Either email or phoneNumber must be provided' })
 
-    // Find or create contact
-    const primaryContact = await findOrCreateContact(email, phoneNumber)
-    const { id } = primaryContact
-    const secondoryContacts = await findSecondoryContacts(email, phoneNumber, id)
+    try {
+        // Find or create contact
+        const primaryContact = await findOrCreateContact(email, phoneNumber)
+        const { id } = primaryContact
 
-    console.log(primaryContact)
+        //Find secondories
+        const secondoryContacts = await findSecondoryContacts(email, phoneNumber, id)
+
+        const emails = [primaryContact.email].filter(Boolean)
+        const phoneNumbers = [primaryContact.phoneNumber].filter(Boolean)
+        const secondaryContactIds = secondoryContacts?.map((contact: any) => contact.id)
+
+        secondoryContacts.forEach((contact: any) => {
+            if (contact?.email && !emails.includes(contact.email)) emails.push(contact.email)
+            if (contact?.phoneNumber && !phoneNumbers.includes(contact.phoneNumbers)) emails.push(contact.phoneNumber)
+        })
+
+        res.status(200).json({
+            contact: {
+                primaryContactId: id,
+                emails,
+                phoneNumbers,
+                secondaryContactIds
+            }
+        })
+    } catch (error) {
+          res.status(500).json({message:error.message})
+    }
 
 
 } 
