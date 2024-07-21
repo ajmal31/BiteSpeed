@@ -40,8 +40,8 @@ const findOrCreateContact = async (email?: string, phoneNumber?: string) => {
         if (!primaryContact) {
             primaryContact = await createNewContact(email, phoneNumber, "primary");
         } else {
-            if (primaryContact.email !== email || primaryContact.phoneNumber !== phoneNumber) {
-                await findOrCreateSecondaryContact(primaryContact.id, email, phoneNumber);
+            if (primaryContact.email !== email || primaryContact?.phoneNumber !== phoneNumber) {
+                await findOrCreateSecondaryContact(primaryContact?.id, email, phoneNumber);
             }
         }
 
@@ -71,13 +71,13 @@ export const identifyContact = async (req: Request, res: Response) => {
         const { id } = primaryContact;
 
         const secondaryContacts = await findSecondaryContacts(email, phoneNumber, id);
-        const emails = [primaryContact.email].filter(Boolean);
-        const phoneNumbers = [primaryContact.phoneNumber].filter(Boolean);
-        const secondaryContactIds = secondaryContacts?.map((contact: any) => contact.id) || [];
+        const emails = [primaryContact?.email].filter(Boolean);
+        const phoneNumbers = [primaryContact?.phoneNumber].filter(Boolean);
+        const secondaryContactIds = secondaryContacts?.map((contact: any) => contact?.id) || [];
 
         secondaryContacts.forEach((contact: any) => {
             if (contact?.email && !emails.includes(contact.email)) emails.push(contact.email);
-            if (contact?.phoneNumber && !phoneNumbers.includes(contact.phoneNumber)) phoneNumbers.push(contact.phoneNumber);
+            if (contact?.phoneNumber && !phoneNumbers.includes(contact.phoneNumber)) phoneNumbers.push(contact?.phoneNumber);
         });
 
         return res.status(200).json({
